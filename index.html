@@ -3,28 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PiLivraison</title>
+<title>PiLivraison - Calavi</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <style>
-body{font-family:Arial;margin:0;background:#FFF7ED}
-header{background:#FF6B00;color:white;text-align:center;padding:20px}
-.card{background:white;margin:20px;padding:20px;box-shadow:0 10px 20px #ddd}
-input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-radius:10px;box-sizing:border-box}
-button{background:#FF6B00;color:white;padding:15px;border:none;border-radius:10px;font-size:18px;font-weight:bold;width:100%}
+body{font-family:Arial;background:#FFF7ED;margin:0;padding:15px}
+.card{background:white;padding:20px;border-radius:15px;margin-bottom:15px}
+input,select{width:100%;padding:13px;margin:8px 0;border:1px solid #ddd;border-radius:10px;font-size:16px;box-sizing:border-box}
+.btn{width:100%;padding:15px;border:none;border-radius:10px;font-size:18px;font-weight:bold}
+.btn-orange{background:#ff6b00;color:white}
+.btn-pi{background:#7c3aed;color:white;margin-top:10px}
 </style>
 </head>
 <body>
-<header>
-<h1>🛵 PiLivraison</h1>
-<p>Livraison rapide à Abomey-Calavi</p>
-<p>⭐ Payement en Pi</p>
-</header>
 <div class="card">
 <h2>Commander une livraison</h2>
-<input id="depart" placeholder="D'où ? Ex: Godomey">
-<input id="arrivee" placeholder="Vers où ? Ex: Calavi centre">
-<select id="vehicule"><option>Moto - 500 FCFA</option><option>Voiture - 1500 FCFA</option><option>Tricycle - 2000 FCFA</option></select>
-<input id="numero" placeholder="Ton numéro WhatsApp">
-<button onclick="commander()">COMMANDER MAINTENANT</button>
+<input placeholder="D'où ? Ex: Godomey">
+<input placeholder="Vers où ? Ex: Calavi centre">
+<select><option>Moto - 500 FCFA</option><option>Voiture - 1500 FCFA</option></select>
+<input placeholder="Ton numéro WhatsApp">
+<button class="btn btn-orange">COMMANDER MAINTENANT</button>
+<button id="btnPi" class="btn btn-pi">PAYER EN Pi (TEST)</button>
+<p id="msgPi" style="text-align:center"></p>
 </div>
 <div class="card">
 <h3>🍔 Restaurants partenaires</h3>
@@ -33,51 +32,18 @@ button{background:#FF6B00;color:white;padding:15px;border:none;border-radius:10p
 <p>🍗 Poulet Bicyclette - Ouèdo</p>
 </div>
 <script>
-function commander(){
-var d=document.getElementById('depart').value;
-var a=document.getElementById('arrivee').value;
-var v=document.getElementById('vehicule').value;
-var n=document.getElementById('numero').value;
-if(!d||!a||!n){alert('Remplis tout stp !');return;}
-var msg="NOUVELLE COMMANDE PiLivraison 🛵%0A%0ADe: "+d+"%0AVers: "+a+"%0AVehicule: "+v+"%0ANumero client: "+n;
-window.open("https://wa.me/2290162327149?text="+msg,"_blank");
-}
+Pi.init({version:"2.0", sandbox:true});
+document.getElementById("btnPi").onclick = function(){
+document.getElementById("msgPi").innerText="Connexion Pi...";
+Pi.authenticate(['payments'], function(auth){
+Pi.createPayment({amount:0.01, memo:"Livraison test", metadata:{test:1}}, {
+onReadyForServerApproval:function(id){ document.getElementById("msgPi").innerText="Paiement créé : "+id; },
+onReadyForServerCompletion:function(id,tx){ document.getElementById("msgPi").innerText="Paiement réussi !"; },
+onCancel:function(id){ document.getElementById("msgPi").innerText="Annulé"; },
+onError:function(e){ document.getElementById("msgPi").innerText="Erreur : "+e; }
+});
+}, function(e){ document.getElementById("msgPi").innerText="Erreur auth : "+e; });
+};
 </script>
-</bo<script src="https://sdk.minepi.com/pi-sdk.js"></script>
-<script>
-Pi.init({version:"2.0", sandbox:true});
-function payerPi(){
-  Pi.authenticate(['username','payments'], function(auth){
-    Pi.createPayment({amount:1, memo:"Livraison PiLivraison", metadata:{type:"livraison"}}, {
-      onReadyForServerApproval:function(id){ alert("Paiement en cours..."); },
-      onReadyForServerCompletion:function(id,txid){ alert("Paiement Pi reussi !"); },
-      onCancel:function(id){ alert("Paiement annule"); },
-      onError:function(e){ alert("Erreur Pi: "+e); }
-    });
-  });
-}
-var b=document.createElement("button");
-b.innerHTML="PAYER EN Pi (TEST)";
-b.style="background:#6A1B9A;color:white;padding:15px;border:none;border-radius:10px;font-size:18px;font-weight:bold;width:100%;margin-top:10px";
-b.onclick=payerPi;
-document.querySelector(".card").appendChild(b);
-</scrip<script src="https://sdk.minepi.com/pi-sdk.js"></script>
-<script>
-Pi.init({version:"2.0", sandbox:true});
-function payerPi(){
-  Pi.authenticate(['username','payments'], function(auth){
-    Pi.createPayment({amount:1, memo:"Livraison PiLivraison", metadata:{type:"livraison"}}, {
-      onReadyForServerApproval:function(id){ alert("Paiement en cours..."); },
-      onReadyForServerCompletion:function(id,txid){ alert("Paiement Pi reussi !"); },
-      onCancel:function(id){ alert("Paiement annule"); },
-      onError:function(e){ alert("Erreur Pi: "+e); }
-    });
-  });
-}
-var b=document.createElement("button");
-b.innerHTML="PAYER EN Pi (TEST)";
-b.style="background:#6A1B9A;color:white;padding:15px;border:none;border-radius:10px;font-size:18px;font-weight:bold;width:100%;margin-top:10px";
-b.onclick=payerPi;
-document.querySelector(".card").appendChild(b);
-
+</body>
 </html>
