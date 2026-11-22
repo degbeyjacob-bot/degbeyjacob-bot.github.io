@@ -43,5 +43,41 @@ var msg="NOUVELLE COMMANDE PiLivraison 🛵%0A%0ADe: "+d+"%0AVers: "+a+"%0AVehic
 window.open("https://wa.me/2290162327149?text="+msg,"_blank");
 }
 </script>
-</body>
+</bo<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script>
+Pi.init({version:"2.0", sandbox:true});
+function payerPi(){
+  Pi.authenticate(['username','payments'], function(auth){
+    Pi.createPayment({amount:1, memo:"Livraison PiLivraison", metadata:{type:"livraison"}}, {
+      onReadyForServerApproval:function(id){ alert("Paiement en cours..."); },
+      onReadyForServerCompletion:function(id,txid){ alert("Paiement Pi reussi !"); },
+      onCancel:function(id){ alert("Paiement annule"); },
+      onError:function(e){ alert("Erreur Pi: "+e); }
+    });
+  });
+}
+var b=document.createElement("button");
+b.innerHTML="PAYER EN Pi (TEST)";
+b.style="background:#6A1B9A;color:white;padding:15px;border:none;border-radius:10px;font-size:18px;font-weight:bold;width:100%;margin-top:10px";
+b.onclick=payerPi;
+document.querySelector(".card").appendChild(b);
+</scrip<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script>
+Pi.init({version:"2.0", sandbox:true});
+function payerPi(){
+  Pi.authenticate(['username','payments'], function(auth){
+    Pi.createPayment({amount:1, memo:"Livraison PiLivraison", metadata:{type:"livraison"}}, {
+      onReadyForServerApproval:function(id){ alert("Paiement en cours..."); },
+      onReadyForServerCompletion:function(id,txid){ alert("Paiement Pi reussi !"); },
+      onCancel:function(id){ alert("Paiement annule"); },
+      onError:function(e){ alert("Erreur Pi: "+e); }
+    });
+  });
+}
+var b=document.createElement("button");
+b.innerHTML="PAYER EN Pi (TEST)";
+b.style="background:#6A1B9A;color:white;padding:15px;border:none;border-radius:10px;font-size:18px;font-weight:bold;width:100%;margin-top:10px";
+b.onclick=payerPi;
+document.querySelector(".card").appendChild(b);
+
 </html>
